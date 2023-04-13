@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Thu Apr 13 15:24:41 2023
+
+@author: ian50
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Fri Mar 10 11:08:25 2023
 
 @author: ian.chen25
@@ -174,80 +181,81 @@ for i in product_list:
 #Statement Generate
     #df.loc[df['column_name'] == some_value]
     #df.loc[(df['column_name'] >= A) & (df['column_name'] <= B)]
-#MAU statement
-print(f"{vnd_df.iloc[0]['Currency']} market MAU situation as below: ")
-result_market = target_mau_summary['target_market_mau'].loc[(target_mau_summary['target_market_mau']['Year'] == Year)
-                                           &(target_mau_summary['target_market_mau']['Month'] == Month)]
-print(f"{result_market.iloc[0]['Market']} changed {result_market.iloc[0]['PCT_Change']} % in {result_market.iloc[0]['Year']} {result_market.iloc[0]['Month']}.")
-print(f"{result_market.iloc[1]['Market']} changed {result_market.iloc[1]['PCT_Change']} % in {result_market.iloc[1]['Year']} {result_market.iloc[1]['Month']}.")
-
-result_brand = target_mau_summary['target_brand_mau'].loc[(target_mau_summary['target_brand_mau']['Year'] == Year)
-                                           &(target_mau_summary['target_brand_mau']['Month'] == Month)]
-print(f"{result_brand.iloc[0]['Brand']} changed {result_brand.iloc[0]['PCT_Change']} % in {result_brand.iloc[0]['Year']} {result_brand.iloc[0]['Month']}.")
-print(f"{result_brand.iloc[1]['Brand']} changed {result_brand.iloc[1]['PCT_Change']} % in {result_brand.iloc[1]['Year']} {result_brand.iloc[1]['Month']}.")
-
-result_mau = target_mau_summary['target_mau'].round(2)
-print(f"MAU last month is {result_mau.iloc[0]['MAU'].astype(int)} compare with this month {result_mau.iloc[1]['MAU'].astype(int)} changed {result_mau.iloc[1]['PCT_Change']}%.")
-
-result_pt_mau = target_mau_summary['target_pt_mau'].round(2)
-print(f"{result_pt_mau.iloc[0]['Type']} MAU last month is {result_pt_mau.iloc[0]['MAU']} compare with this month {result_pt_mau.iloc[1]['MAU']} changed {result_pt_mau.iloc[1]['PCT_Change']}%.")
-print(f"{result_pt_mau.iloc[2]['Type']} MAU last month is {result_pt_mau.iloc[2]['MAU']} compare with this month {result_pt_mau.iloc[3]['MAU']} changed {result_pt_mau.iloc[3]['PCT_Change']}%.")
-print(f"{result_pt_mau.iloc[4]['Type']} MAU last month is {result_pt_mau.iloc[4]['MAU']} compare with this month {result_pt_mau.iloc[5]['MAU']} changed {result_pt_mau.iloc[5]['PCT_Change']}%.")
-print("\n")
-#Winning Statement
-print(f"{vnd_df.iloc[0]['Currency']} market Winning situation as below: ")
-result_winning = target_winning_summary['target_winning_turnover']
-print(f"Winning last month is {result_winning.iloc[0]['Winlost'].round(0).astype(int)} compare with this month {result_winning.iloc[1]['Winlost'].round(0).astype(int)} changed {result_winning.iloc[1]['Winning_PCT_Change']}%.")
-print(f"Turnover last month is {result_winning.iloc[0]['Turnover'].round(0).astype(int)} compare with this month {result_winning.iloc[1]['Turnover'].round(0).astype(int)} changed {result_winning.iloc[1]['Turnover_PCT_Change']}%.")
-winning_change = (result_winning.iloc[1]['Winlost'] - result_winning.iloc[0]['Winlost']).round(0).astype(int)
-print(f"Winning change {winning_change}.")
-
-result_big_player = target_winning_summary['big_player_check']
-result_product = target_winning_summary['target_margin']
-if (result_winning.iloc[1]['Winlost'].astype(int) - result_winning.iloc[0]['Winlost'].astype(int)) <= 0:
-    result_big_player_negative = result_big_player[result_big_player['diff'] < 0 ].sort_values(by='diff', ascending=True).reset_index(drop=True)
-    accum_winlost = 0
-    print(f"{result_big_player_negative['UserName'].values} are top {big_player_limit} losing big player.")
-    print(f"{result_big_player_negative['diff'].values} are top {big_player_limit} losing big player's winlost.")
-    for i in result_big_player_negative.index:
-        accum_winlost += result_big_player_negative.iloc[i]['diff']
-        print(f"{i+1} top players account for {((accum_winlost/winning_change)*100).round(2)}% of winlost.")
-        
-elif (result_winning.iloc[1]['Winlost'].astype(int) - result_winning.iloc[0]['Winlost'].astype(int)) > 0:
-    result_big_player_positive = result_big_player[result_big_player['diff'] > 0 ].sort_values(by='diff', ascending=False).reset_index(drop=True)
-    accum_winlost = 0
-    print(f"{result_big_player_positive['UserName'].values} are top {big_player_limit} winning big player.")
-    print(f"{result_big_player_positive['diff'].values} are top {big_player_limit} winning big player's winlost.")
-
-    for i in result_big_player_positive.index:
-        accum_winlost += result_big_player_positive.iloc[i]['diff']
-        print(f"{i+1} top players account for {((accum_winlost/winning_change)*100).round(2)}% of winlost.")
-casino_winning_change = result_product.iloc[1]['Company_Winlost'] - result_product.iloc[0]['Company_Winlost']
-games_winning_change = result_product.iloc[5]['Company_Winlost'] - result_product.iloc[4]['Company_Winlost']
-sports_winning_change = result_product.iloc[7]['Company_Winlost'] - result_product.iloc[6]['Company_Winlost']
-esports_winning_change = result_product.iloc[3]['Company_Winlost'] - result_product.iloc[2]['Company_Winlost']
-print(f"Sports winlost last month is {result_product.iloc[6]['Company_Winlost']} compare with this month {result_product.iloc[7]['Company_Winlost']} change {sports_winning_change}.")
-print(f"Games winlost last month is {result_product.iloc[4]['Company_Winlost']} compare with this month {result_product.iloc[5]['Company_Winlost']} change {games_winning_change}.")
-print(f"Casino winlost last month is {result_product.iloc[0]['Company_Winlost']} compare with this month {result_product.iloc[1]['Company_Winlost']} change {casino_winning_change}.")
-print(f"ESport winlost last month is {result_product.iloc[2]['Company_Winlost']} compare with this month {result_product.iloc[3]['Company_Winlost']} change {esports_winning_change}.")
-print(f"Sports account for {((sports_winning_change/winning_change)*100).round(2)}% of winlost.")
-print(f"Games account for {((games_winning_change/winning_change)*100).round(2)}% of winlost.")
-print(f"Casino account for {((casino_winning_change/winning_change)*100).round(2)}% of winlost.")
-print(f"ESports account for {((esports_winning_change/winning_change)*100).round(2)}% of winlost.")
-#Product Margin Situation
-result_product['Margin'] = result_product['Margin'].round(2)
-print(f"Sports Winlost change {result_product.iloc[7]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[7]['Turnover_PCT_change'].round(2)}%")
-print(f"Sports margin last month is {result_product.iloc[6]['Margin']} compare with this month {result_product.iloc[7]['Margin']} change {(result_product.iloc[7]['Margin']-result_product.iloc[6]['Margin']).round(2)}.")
-print(f"Sports margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_Sport_ex_margin'].iloc[0]['Margin'].round(2)}.")
-print(f"Games Winlost change {result_product.iloc[5]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[5]['Turnover_PCT_change'].round(2)}%")
-print(f"Games margin last month is {result_product.iloc[4]['Margin']} compare with this month {result_product.iloc[5]['Margin']} change {(result_product.iloc[5]['Margin']-result_product.iloc[4]['Margin']).round(2)}.")
-print(f"Games margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_Game_ex_margin'].iloc[0]['Margin'].round(2)}.")
-print(f"Casino Winlost change {result_product.iloc[1]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[1]['Turnover_PCT_change'].round(2)}%")
-print(f"Casino margin last month is {result_product.iloc[0]['Margin']} compare with this month {result_product.iloc[1]['Margin']} change {(result_product.iloc[1]['Margin']-result_product.iloc[0]['Margin']).round(2)}.")
-print(f"Casino margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_Casino_ex_margin'].iloc[0]['Margin'].round(2)}.")
-print(f"ESport Winlost change {result_product.iloc[3]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[3]['Turnover_PCT_change'].round(2)}%")
-print(f"ESport margin last month is {result_product.iloc[2]['Margin']} compare with this month {result_product.iloc[3]['Margin']} change {(result_product.iloc[3]['Margin']-result_product.iloc[2]['Margin']).round(2)}.")
-print(f"Esport margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_ESport_ex_margin'].iloc[0]['Margin'].round(2)}.")
+with open("VND_Market.txt", "a") as f:
+    #MAU statement
+    print(f"{vnd_df.iloc[0]['Currency']} market MAU situation as below: ", file=f)
+    result_market = target_mau_summary['target_market_mau'].loc[(target_mau_summary['target_market_mau']['Year'] == Year)
+                                               &(target_mau_summary['target_market_mau']['Month'] == Month)]
+    print(f"{result_market.iloc[0]['Market']} changed {result_market.iloc[0]['PCT_Change']} % in {result_market.iloc[0]['Year']} {result_market.iloc[0]['Month']}.", file=f)
+    print(f"{result_market.iloc[1]['Market']} changed {result_market.iloc[1]['PCT_Change']} % in {result_market.iloc[1]['Year']} {result_market.iloc[1]['Month']}.", file=f)
+    
+    result_brand = target_mau_summary['target_brand_mau'].loc[(target_mau_summary['target_brand_mau']['Year'] == Year)
+                                               &(target_mau_summary['target_brand_mau']['Month'] == Month)]
+    print(f"{result_brand.iloc[0]['Brand']} changed {result_brand.iloc[0]['PCT_Change']} % in {result_brand.iloc[0]['Year']} {result_brand.iloc[0]['Month']}.", file=f)
+    print(f"{result_brand.iloc[1]['Brand']} changed {result_brand.iloc[1]['PCT_Change']} % in {result_brand.iloc[1]['Year']} {result_brand.iloc[1]['Month']}.", file=f)
+    
+    result_mau = target_mau_summary['target_mau'].round(2)
+    print(f"MAU last month is {result_mau.iloc[0]['MAU'].astype(int)} compare with this month {result_mau.iloc[1]['MAU'].astype(int)} changed {result_mau.iloc[1]['PCT_Change']}%.", file=f)
+    
+    result_pt_mau = target_mau_summary['target_pt_mau'].round(2)
+    print(f"{result_pt_mau.iloc[0]['Type']} MAU last month is {result_pt_mau.iloc[0]['MAU']} compare with this month {result_pt_mau.iloc[1]['MAU']} changed {result_pt_mau.iloc[1]['PCT_Change']}%.", file=f)
+    print(f"{result_pt_mau.iloc[2]['Type']} MAU last month is {result_pt_mau.iloc[2]['MAU']} compare with this month {result_pt_mau.iloc[3]['MAU']} changed {result_pt_mau.iloc[3]['PCT_Change']}%.", file=f)
+    print(f"{result_pt_mau.iloc[4]['Type']} MAU last month is {result_pt_mau.iloc[4]['MAU']} compare with this month {result_pt_mau.iloc[5]['MAU']} changed {result_pt_mau.iloc[5]['PCT_Change']}%.", file=f)
+    print("\n", file=f)
+    #Winning Statement
+    print(f"{vnd_df.iloc[0]['Currency']} market Winning situation as below: ", file=f)
+    result_winning = target_winning_summary['target_winning_turnover']
+    print(f"Winning last month is {result_winning.iloc[0]['Winlost'].round(0).astype(int)} compare with this month {result_winning.iloc[1]['Winlost'].round(0).astype(int)} changed {result_winning.iloc[1]['Winning_PCT_Change']}%.", file=f)
+    print(f"Turnover last month is {result_winning.iloc[0]['Turnover'].round(0).astype(int)} compare with this month {result_winning.iloc[1]['Turnover'].round(0).astype(int)} changed {result_winning.iloc[1]['Turnover_PCT_Change']}%.", file=f)
+    winning_change = (result_winning.iloc[1]['Winlost'] - result_winning.iloc[0]['Winlost']).round(0).astype(int)
+    print(f"Winning change {winning_change}.", file=f)
+    
+    result_big_player = target_winning_summary['big_player_check']
+    result_product = target_winning_summary['target_margin']
+    if (result_winning.iloc[1]['Winlost'].astype(int) - result_winning.iloc[0]['Winlost'].astype(int)) <= 0:
+        result_big_player_negative = result_big_player[result_big_player['diff'] < 0 ].sort_values(by='diff', ascending=True).reset_index(drop=True)
+        accum_winlost = 0
+        print(f"{result_big_player_negative['UserName'].values} are top {big_player_limit} losing big player.", file=f)
+        print(f"{result_big_player_negative['diff'].values} are top {big_player_limit} losing big player's winlost.", file=f)
+        for i in result_big_player_negative.index:
+            accum_winlost += result_big_player_negative.iloc[i]['diff']
+            print(f"{i+1} top players account for {((accum_winlost/winning_change)*100).round(2)}% of winlost.", file=f)
+            
+    elif (result_winning.iloc[1]['Winlost'].astype(int) - result_winning.iloc[0]['Winlost'].astype(int)) > 0:
+        result_big_player_positive = result_big_player[result_big_player['diff'] > 0 ].sort_values(by='diff', ascending=False).reset_index(drop=True)
+        accum_winlost = 0
+        print(f"{result_big_player_positive['UserName'].values} are top {big_player_limit} winning big player.", file=f)
+        print(f"{result_big_player_positive['diff'].values} are top {big_player_limit} winning big player's winlost.", file=f)
+    
+        for i in result_big_player_positive.index:
+            accum_winlost += result_big_player_positive.iloc[i]['diff']
+            print(f"{i+1} top players account for {((accum_winlost/winning_change)*100).round(2)}% of winlost.", file=f)
+    casino_winning_change = result_product.iloc[1]['Company_Winlost'] - result_product.iloc[0]['Company_Winlost']
+    games_winning_change = result_product.iloc[5]['Company_Winlost'] - result_product.iloc[4]['Company_Winlost']
+    sports_winning_change = result_product.iloc[7]['Company_Winlost'] - result_product.iloc[6]['Company_Winlost']
+    esports_winning_change = result_product.iloc[3]['Company_Winlost'] - result_product.iloc[2]['Company_Winlost']
+    print(f"Sports winlost last month is {result_product.iloc[6]['Company_Winlost']} compare with this month {result_product.iloc[7]['Company_Winlost']} change {sports_winning_change}.", file=f)
+    print(f"Games winlost last month is {result_product.iloc[4]['Company_Winlost']} compare with this month {result_product.iloc[5]['Company_Winlost']} change {games_winning_change}.", file=f)
+    print(f"Casino winlost last month is {result_product.iloc[0]['Company_Winlost']} compare with this month {result_product.iloc[1]['Company_Winlost']} change {casino_winning_change}.", file=f)
+    print(f"ESport winlost last month is {result_product.iloc[2]['Company_Winlost']} compare with this month {result_product.iloc[3]['Company_Winlost']} change {esports_winning_change}.", file=f)
+    print(f"Sports account for {((sports_winning_change/winning_change)*100).round(2)}% of winlost.", file=f)
+    print(f"Games account for {((games_winning_change/winning_change)*100).round(2)}% of winlost.", file=f)
+    print(f"Casino account for {((casino_winning_change/winning_change)*100).round(2)}% of winlost.", file=f)
+    print(f"ESports account for {((esports_winning_change/winning_change)*100).round(2)}% of winlost.", file=f)
+    #Product Margin Situation
+    result_product['Margin'] = result_product['Margin'].round(2)
+    print(f"Sports Winlost change {result_product.iloc[7]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[7]['Turnover_PCT_change'].round(2)}%", file=f)
+    print(f"Sports margin last month is {result_product.iloc[6]['Margin']} compare with this month {result_product.iloc[7]['Margin']} change {(result_product.iloc[7]['Margin']-result_product.iloc[6]['Margin']).round(2)}.", file=f)
+    print(f"Sports margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_Sport_ex_margin'].iloc[0]['Margin'].round(2)}.", file=f)
+    print(f"Games Winlost change {result_product.iloc[5]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[5]['Turnover_PCT_change'].round(2)}%", file=f)
+    print(f"Games margin last month is {result_product.iloc[4]['Margin']} compare with this month {result_product.iloc[5]['Margin']} change {(result_product.iloc[5]['Margin']-result_product.iloc[4]['Margin']).round(2)}.", file=f)
+    print(f"Games margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_Game_ex_margin'].iloc[0]['Margin'].round(2)}.", file=f)
+    print(f"Casino Winlost change {result_product.iloc[1]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[1]['Turnover_PCT_change'].round(2)}%", file=f)
+    print(f"Casino margin last month is {result_product.iloc[0]['Margin']} compare with this month {result_product.iloc[1]['Margin']} change {(result_product.iloc[1]['Margin']-result_product.iloc[0]['Margin']).round(2)}.", file=f)
+    print(f"Casino margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_Casino_ex_margin'].iloc[0]['Margin'].round(2)}.", file=f)
+    print(f"ESport Winlost change {result_product.iloc[3]['Winlost_PCT_change'].round(2)}%, Turoverover change {result_product.iloc[3]['Turnover_PCT_change'].round(2)}%", file=f)
+    print(f"ESport margin last month is {result_product.iloc[2]['Margin']} compare with this month {result_product.iloc[3]['Margin']} change {(result_product.iloc[3]['Margin']-result_product.iloc[2]['Margin']).round(2)}.", file=f)
+    print(f"Esport margin exclude top & bottom {big_player_limit} big player is {target_product_bp['target_ESport_ex_margin'].iloc[0]['Margin'].round(2)}.", file=f)
 
 #%%
 #Get chart data for slides
